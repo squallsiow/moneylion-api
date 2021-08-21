@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/moneylion-api/env"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -34,6 +36,8 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 func main() {
 
+	// Initialize environment variable
+	env.Init()
 	// Create singleton handler
 	ctx := context.Background()
 	bs := bootstrap.New(ctx)

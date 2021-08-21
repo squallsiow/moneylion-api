@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  ###########
+  ## MySQL ##
+  ###########
+  moneylion:
+    image: moneylion
+    restart: "no"
+    ports:
+      - 8080:8080
+    environment:
+      - MONGO_DB_NAME=moneylion
+      - Mongo_DB_Connection="mongodb+srv://admin:admin@cluster-moneylion.l6js4.mongodb.net/test"

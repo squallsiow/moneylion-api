@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "bf347df3-ae1e-4b37-8f29-53a5c9d161f6",
+		"name": "moneylion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"Admin\",\n    \"email\" : \"admin@email.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Feature",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"Global Settings\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/feature-new",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature-new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feature Access",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/feature?featureName=Global Settings&email=admin@email.com",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature"
+					],
+					"query": [
+						{
+							"key": "featureName",
+							"value": "Global Settings"
+						},
+						{
+							"key": "email",
+							"value": "admin@email.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Grant Feature Access",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"featureName\" : \"Global Settings\",\n    \"email\" : \"admin@email.com\",\n    \"enable\" : true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/feature",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
