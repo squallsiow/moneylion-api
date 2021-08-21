@@ -1,17 +1,15 @@
-package handler
+package bootstrap
 
 import (
 	"context"
-	"fmt"
 	"github.com/moneylion-api/constant"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
 )
 
-func InitMongoDB(ctx context.Context) {
+func (hdl *Bootstrap) InitMongoDB(ctx context.Context) {
 	/*
 	   Connect to my cluster
 	*/
@@ -26,12 +24,6 @@ func InitMongoDB(ctx context.Context) {
 	}
 	defer cancel()
 
-	/*
-	   List databases
-	*/
-	databases, err := client.ListDatabaseNames(ctx, bson.M{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(databases)
+	hdl.MgClient = client
+
 }

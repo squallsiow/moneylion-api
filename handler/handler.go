@@ -1,14 +1,20 @@
 package handler
 
-import "go.mongodb.org/mongo-driver/mongo"
+import (
+	"github.com/moneylion-api/bootstrap"
+	"github.com/moneylion-api/constant"
+	"github.com/moneylion-api/repository"
+)
 
 // Handler : Singleton Handler
 type Handler struct {
-	client *mongo.Client
+	Repository *repository.Repository
 }
 
 // New :
-func New() (*Handler, error) {
-	ctrl := &Handler{}
-	return ctrl, nil
+func New(bs *bootstrap.Bootstrap) (*Handler, error) {
+	hdl := &Handler{}
+	hdl.Repository = repository.New(constant.Mongo_DB_Name, bs.MgClient)
+
+	return hdl, nil
 }

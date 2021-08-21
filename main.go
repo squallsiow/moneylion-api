@@ -4,13 +4,12 @@ import (
 	"context"
 	"html/template"
 	"io"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/moneylion-api/bootstrap"
 	"github.com/moneylion-api/handler"
 )
 
@@ -22,10 +21,23 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		// Optionally, you could return the error to give each route more control over the status code
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
+}
 func main() {
 
 	// Create singleton handler
-	hdl, err := handler.New()
+	ctx := context.Background()
+	bs := bootstrap.New(ctx)
+	hdl, err := handler.New(bs)
 	if err != nil {
 		panic(err)
 	}
@@ -36,6 +48,7 @@ func main() {
 	}
 	// create new echo web server
 	api := echo.New()
+	api.Validator = &CustomValidator{validator: validator.New()}
 
 	api.Renderer = t
 
@@ -46,26 +59,12 @@ func main() {
 
 	//  route
 	api.GET("/", hdl.Hello)
+	api.POST("/user", hdl.CreateUser)
+	api.POST("/feature-new", hdl.CreateFeature)
 
-	// api.Logger.Fatal(api.Start(":8080"))
+	api.GET("/feature", hdl.GetFeatureAccess)
+	api.POST("/feature", hdl.AccessFeature)
 
-	// Start server
-	go func() {
-		if err := api.Start(":8080"); err != nil {
-			api.Logger.Info("shutting down the server")
-		}
-	}()
-
-	// Wait for interrupt signal to gracefully shutdown the server with
-	// a timeout of 10 seconds.
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	if err := api.Shutdown(ctx); err != nil {
-		api.Logger.Fatal(err)
-	}
+	api.Logger.Fatal(api.Start(":8080"))
 
 }
